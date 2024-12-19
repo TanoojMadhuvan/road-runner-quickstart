@@ -13,6 +13,8 @@ import com.acmerobotics.roadrunner.MecanumKinematics;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.MotorFeedforward;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.*;
+
 import com.acmerobotics.roadrunner.Pose2dDual;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.Time;
@@ -53,6 +55,9 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+
+    //private TrajectorySequenceRunner trajectorySequenceRunner;
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -63,23 +68,23 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        public double inPerTick = 1;
+        public double inPerTick = 0.004;
         public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 0;
+        public double trackWidthTicks = 16;
 
         // feedforward parameters (in tick units)
-        public double kS = 0;
-        public double kV = 0;
-        public double kA = 0;
+        public double kS = 10;
+        public double kV = 10;
+        public double kA = 10;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxWheelVel = 50000;
+        public double minProfileAccel = -3000;
+        public double maxProfileAccel = 5000;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI; // shared with path
-        public double maxAngAccel = Math.PI;
+        public double maxAngVel = Math.PI*1000; // shared with path
+        public double maxAngAccel = Math.PI*1000;
 
         // path controller gains
         public double axialGain = 0.0;
@@ -228,7 +233,8 @@ public final class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-        //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+           leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -486,4 +492,35 @@ public final class MecanumDrive {
                 defaultVelConstraint, defaultAccelConstraint
         );
     }
+
+//
+//    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
+//        return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+//    }
+//
+//    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
+//        return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+//    }
+
+//    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
+//        return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+//    }
+//
+//    public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
+//        return new TrajectorySequenceBuilder(
+//                startPose,
+//                100, 30,
+//                50, 40
+//        );
+//    }
+//
+//    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
+//        followTrajectorySequenceAsync(trajectorySequence);
+//
+//    }
+
+//    public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
+//        trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
+//    }
+
 }
